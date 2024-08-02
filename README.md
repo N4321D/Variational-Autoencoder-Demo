@@ -6,7 +6,7 @@
 ██║ ╚████║███████╗╚██████╔╝██║  ██║███████╗██║     ███████╗███████╗╚██████╗   ██║       
 ╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝╚══════╝ ╚═════╝   ╚═╝ INC.      
 ```
-# VARIATIONAL AUTOENCODER DEMO
+# VARIATIONAL AUTOENCODER CLASSIFICATION DEMO
 
 This repository contains a demo showcasing how autoencoders can be used to classify patterns in timeseries data, with a focus on variational autoencoders. It is also an excellent way to learn more about different model architecture, optimizers, activation functions and other aspects of machine learning because it show you live what happens in the latent layer each epoch. Thus, basically showing you how the model "learns".
 
