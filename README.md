@@ -73,13 +73,13 @@ The encoder uses convolutional layers to detect features of the input signal. Th
 ## Time Encoding and Bypass
 This variational auto encoder uses time encoding to help the decoder with the sliding windowns that contain the patterns or parts of the patterns. With the time encoding passed through the encoder and decoder the patterns are classified on a circle where the center is the noise and from there every pattern is further away from the center. The rotational direction of each points indicates where the encoder detected the pattern in the window. 
 
-![with time encoding](./docs/with_time_enc.png)
+![with time encoding](docs/with_time_enc.png)
 
 However, for real world applications this is not always useful because the timeing might not always be known or available. A nice way to deal with this is to pass time encoding (you need this for training) directly to the decoder (and bypass the encoder). This way the decoder "knows" where in the window it has to reconstruct the pattern and gets good matches, but the encoder only has to classify which pattern is most common in the window. To do this you can run the notebook with the build_model(... time_bypass=True) kwarg.   
 
 This will send the last value from the time encoder directly to the decoder so that the encoder just learns to detect the patterns without any indication of where in the window they happen. (Note that a flat line will be returned for the time encoder in the live plot that will not have any impact on training)
 
 The latent dimension (output) of the encoder looks like this with time encoding bypass:  
-![bypass](./docs/time_bypass.png)
+![bypass](docs/time_bypass.png)
 
 
