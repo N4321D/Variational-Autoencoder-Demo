@@ -77,7 +77,7 @@ This VAE uses time encoding to help the decoder with the sliding windows that co
 
 However, for real-world applications, this is not always useful because the timing might not always be known or available. A practical way to address this is to pass time encoding (essential for training) directly to the decoder, bypassing the encoder. This way, the decoder “knows” where in the window it has to reconstruct the pattern and achieves good matches, while the encoder only has to classify which pattern is most common in the window. To do this, you can run the notebook with the `build_model(..., time_bypass=True)` keyword argument.
 
-This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur. (Note that a flat line will be returned for the time encoder in the live plot, which will not impact training.)
+This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur. (Note that a very basic reconstruction of the time encoder will be done by the decoder for simplicity of the demo).
 
 The latent dimension (output) of the encoder looks like this with time encoding bypass: 
 ![bypass](docs/time_bypass.png)
