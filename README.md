@@ -66,20 +66,20 @@ train(batchsize=256, epochs=600)
 If anyone knows how to fix that, please create a pull request or post your suggestion.
 
 ## VAE Demo
-This notebook demonstrates how a variational autoencoder can be used to detect patterns in a signal without any supervision. A signal generator generates a predefined number of signals that repeat themselves x times in a time trace. Then noise is added and the signals are shuffled. Signals are "manually" labelled by which signal is most dominant in every window of a sliding window view using the mode. This labelling is only used for to plot to visualize how the model classifies the signals. 
+This notebook demonstrates how a variational autoencoder (VAE) can be used to detect patterns in a signal without supervision. A signal generator creates a predefined number of signals that repeat themselves (x) times in a time trace. Noise is then added, and the signals are shuffled. Signals are “manually” labeled based on the most dominant signal in each window of a sliding window view using the mode. This labeling is only used for plotting to visualize how the model classifies the signals.
 
-The encoder uses convolutional layers to detect features of the input signal. Then projects onto 2 different dense layers that together form the latent dimension. One that predicts a mean and the other a normally distributed variation. Using these two layers a normal distribution is calculated and a random sample from that is sent to the decoder that uses convulational transpose layers to upscale the signal after which a GRU layer is used to create an output signal. Both encoder and decoder use multiheaded attention to emphasise the differences between patterns.
+The encoder uses convolutional layers to detect features of the input signal. It then projects onto two different dense layers that together form the latent dimension: one predicts a mean, and the other predicts a normally distributed variation. Using these two layers, a normal distribution is calculated, and a random sample from that distribution is sent to the decoder. The decoder uses convolutional transpose layers to upscale the signal, followed by a GRU layer to create an output signal. Both the encoder and decoder use multi-headed attention to emphasize the differences between patterns.
 
 ## Time Encoding and Bypass
-This variational auto encoder uses time encoding to help the decoder with the sliding windowns that contain the patterns or parts of the patterns. With the time encoding passed through the encoder and decoder the patterns are classified on a circle where the center is the noise and from there every pattern is further away from the center. The rotational direction of each points indicates where the encoder detected the pattern in the window. 
+This VAE uses time encoding to help the decoder with the sliding windows that contain the patterns or parts of the patterns. With time encoding passed through the encoder and decoder, the patterns are classified on a circle where the center represents noise, and each pattern is further away from the center. The rotational direction of each point indicates where the encoder detected the pattern in the window.
 
 ![with time encoding](docs/with_time_enc.png)
 
-However, for real world applications this is not always useful because the timeing might not always be known or available. A nice way to deal with this is to pass time encoding (you need this for training) directly to the decoder (and bypass the encoder). This way the decoder "knows" where in the window it has to reconstruct the pattern and gets good matches, but the encoder only has to classify which pattern is most common in the window. To do this you can run the notebook with the build_model(... time_bypass=True) kwarg.   
+However, for real-world applications, this is not always useful because the timing might not always be known or available. A practical way to address this is to pass time encoding (essential for training) directly to the decoder, bypassing the encoder. This way, the decoder “knows” where in the window it has to reconstruct the pattern and achieves good matches, while the encoder only has to classify which pattern is most common in the window. To do this, you can run the notebook with the `build_model(..., time_bypass=True)` keyword argument.
 
-This will send the last value from the time encoder directly to the decoder so that the encoder just learns to detect the patterns without any indication of where in the window they happen. (Note that a flat line will be returned for the time encoder in the live plot that will not have any impact on training)
+This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur. (Note that a flat line will be returned for the time encoder in the live plot, which will not impact training.)
 
-The latent dimension (output) of the encoder looks like this with time encoding bypass:  
+The latent dimension (output) of the encoder looks like this with time encoding bypass: 
 ![bypass](docs/time_bypass.png)
 
 
