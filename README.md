@@ -45,7 +45,7 @@ Other versions might work as well but have not been tested.
 **TLDR:** press Run All -> Wait for userwarning to raise and stop execution -> Run last cell
 
 **Full instructions:**  
-Just run the notebook. At the end before you start the training it will raise a User warning:
+Just run the notebook. At the end before you start the training it will raise a UserWarning:
 ```
 UserWarning: Force stop here to give live image time to load, please run next cell manually after image is loaded
 
