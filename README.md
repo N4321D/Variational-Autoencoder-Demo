@@ -8,25 +8,25 @@
 ```
 # VARIATIONAL AUTOENCODER CLASSIFICATION DEMO
 
-This repository contains a demo showcasing how autoencoders can be used to classify patterns in timeseries data, with a focus on variational autoencoders. It is also an excellent way to learn more about different model architecture, optimizers, activation functions and other aspects of machine learning because it show you live what happens in the latent layer each epoch. Thus, basically showing you how the model "learns".
+This repository contains a demo showcasing how autoencoders can be used to classify patterns in time series data, with a focus on variational autoencoders (VAEs). It is also an excellent way to learn more about different model architectures, optimizers, activation functions, and other aspects of machine learning because it shows you live what happens in the latent layer each epoch, essentially demonstrating how the model “learns”.
 
-The model uses an auto encoder to learn to classify random generated repeating patterns in timeseries data. There are plots that show the performance of the model on validation data live after each epoch. It is shown how the decoder regenerates output data and how the latent dimension looks like.
+The model uses an autoencoder to classify randomly generated repeating patterns in time series data. There are plots that show the model’s performance on validation data live after each epoch. It also demonstrates how the decoder regenerates output data and what the latent dimension looks like.
 
-The structure of this notebook makes it very easy to change the encoder or decoder and see what the effect is of different layers types and architectures. Note that this model has been mainly build to demonstrate how VAEs perform and is not optimized for any real world usage. To do that you  would need to adapt and test it further. 
+The structure of this notebook makes it very easy to change the encoder or decoder and see the effects of different layer types and architectures. Note that this model has been mainly built to demonstrate how VAEs perform and is not optimized for any real-world usage. To achieve that, you would need to adapt and test it further.
 
 # Installation
 ## Colab
 The notebook can be executed in Colab [**here**](https://drive.google.com/file/d/1C5FNazC6efC32GGIwB8_RS1ZeaL4gu1O/view?usp=drive_link)
  
 ## Local
-But if you want to run it locally (recommended) you can download the notebook here. 
+But if you want to run it locally (recommended) you can download the notebook here from the repository. 
 
 ### Docker container
 To setup the right environment I recommend to use this container that we built if you have an NVIDIA GPU:  
 [**Docker Hub**](https://hub.docker.com/repository/docker/n4321d/rapids-keras-torch-tf/general)
 
 ### Create you own enviroment
-However if you feel uncomfortable running random containers (which you should), or dont have an NVIDIA GPU, you can easily create your own enviroment. These are the key packages you need:
+If you feel uncomfortable running random containers (which is good), or if you don’t have an NVIDIA GPU, you can easily create your own environment. These are the key packages you need:
 
 ```
 keras == 3.4.1 
@@ -42,10 +42,10 @@ Other versions might work as well but have not been tested.
 
 # Usage
 
-**TLDR:** press Run All -> Wait for userwarning to raise and stop execution -> Run last cell
+**TL;DR:** press Run All -> Wait for the `UserWarning` to raise and stop execution -> Run last cell
 
 **Full instructions:**  
-Just run the notebook. At the end before you start the training it will raise a UserWarning:
+Just run the notebook. At the end before you start the training it will raise a `UserWarning`:
 ```
 UserWarning: Force stop here to give live image time to load, please run next cell manually after image is loaded
 
