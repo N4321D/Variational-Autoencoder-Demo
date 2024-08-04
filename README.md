@@ -19,7 +19,7 @@ The structure of this notebook makes it very easy to change the encoder or decod
 The notebook can be executed in Colab [**here**](https://drive.google.com/file/d/1C5FNazC6efC32GGIwB8_RS1ZeaL4gu1O/view?usp=drive_link)
  
 ## Local
-But if you want to run it locally you can download the notebook here. 
+But if you want to run it locally (recommended) you can download the notebook here. 
 
 ### Docker container
 To setup the right environment I recommend to use this container that we built if you have an NVIDIA GPU:  
@@ -64,3 +64,22 @@ Wait for the plots to show and then run the last cell where you call train():
 train(batchsize=256, epochs=600)
 ```
 If anyone knows how to fix that, please create a pull request or post your suggestion.
+
+## VAE Demo
+This notebook demonstrates how a variational autoencoder can be used to detect patterns in a signal without any supervision. A signal generator generates a predefined number of signals that repeat themselves x times in a time trace. Then noise is added and the signals are shuffled. Signals are "manually" labelled by which signal is most dominant in every window of a sliding window view using the mode. This labelling is only used for to plot to visualize how the model classifies the signals. 
+
+The encoder uses convolutional layers to detect features of the input signal. Then projects onto 2 different dense layers that together form the latent dimension. One that predicts a mean and the other a normally distributed variation. Using these two layers a normal distribution is calculated and a random sample from that is sent to the decoder that uses convulational transpose layers to upscale the signal after which a GRU layer is used to create an output signal. Both encoder and decoder use multiheaded attention to emphasise the differences between patterns.
+
+## Time Encoding and Bypass
+This variational auto encoder uses time encoding to help the decoder with the sliding windowns that contain the patterns or parts of the patterns. With the time encoding passed through the encoder and decoder the patterns are classified on a circle where the center is the noise and from there every pattern is further away from the center. The rotational direction of each points indicates where the encoder detected the pattern in the window. 
+
+![with time encoding](./docs/with_time_enc.png)
+
+However, for real world applications this is not always useful because the timeing might not always be known or available. A nice way to deal with this is to pass time encoding (you need this for training) directly to the decoder (and bypass the encoder). This way the decoder "knows" where in the window it has to reconstruct the pattern and gets good matches, but the encoder only has to classify which pattern is most common in the window. To do this you can run the notebook with the build_model(... time_bypass=True) kwarg.   
+
+This will send the last value from the time encoder directly to the decoder so that the encoder just learns to detect the patterns without any indication of where in the window they happen. (Note that a flat line will be returned for the time encoder in the live plot that will not have any impact on training)
+
+The latent dimension (output) of the encoder looks like this with time encoding bypass:  
+![bypass](./docs/time_bypass.png)
+
+
