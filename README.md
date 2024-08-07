@@ -75,6 +75,7 @@ This notebook demonstrates how a variational autoencoder (VAE) can be used to de
 
 The encoder uses convolutional layers to detect features of the input signal. It then projects onto two different dense layers that together form the latent dimension: one predicts a mean, and the other predicts a normally distributed variation. Using these two layers, a normal distribution is calculated, and a random sample from that distribution is sent to the decoder. The decoder uses convolutional transpose layers to upscale the signal, followed by a GRU layer to create an output signal. Both the encoder and decoder use multi-headed attention to emphasize the differences between patterns.
 
+### Live Plots
 During training the live plots show the performance of the model after each epoch. They also show the prediction of the model on a sample of the validation data:
 ![Signal Reconstruction](docs/signal_reconstruction.png)
 
@@ -91,6 +92,13 @@ The latent dimension (output) of the encoder looks like this with **time encodin
 ![bypass](docs/time_bypass_enabled.png)    
 
 It is clear that the patterns are clustered well together and noise is separated. But there is a less clear time structure then with time encoding. Other even less time aware patterns can be achieved as well if with different model architectures, but that would complecate the demo.
+
+### Encoder & Decoder Architecture
+Here is an overview of the encoder and decoder architechture. The Encoder is shown with and without bypass enabled. The decoder stays the same:        
+
+|Encoder                                                 |  Encoder (Bypass Enabled) | Decoder  |
+|---------------------------------------------------------|---------|---|
+|<img src="docs/encoder.png" alt="encoder" height="600"/> | <img src="docs/encoder_bypass.png" alt="encoder bypass" height="600"/> | <img src="docs/decoder.png" alt="encoder" height="600"/> | 
 
 ## Other
 - With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes more around 300 - 400 epochs for clusters to show
