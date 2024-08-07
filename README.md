@@ -6,13 +6,18 @@
 ██║ ╚████║███████╗╚██████╔╝██║  ██║███████╗██║     ███████╗███████╗╚██████╗   ██║       
 ╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝╚══════╝ ╚═════╝   ╚═╝ INC.      
 ```
-# VARIATIONAL AUTOENCODER CLASSIFICATION DEMO
+# VARIATIONAL AUTOENCODER TIMESERIES CLASSIFICATION DEMO
 
 This repository contains a demo showcasing how autoencoders can be used to classify patterns in time series data, with a focus on variational autoencoders (VAEs). It is also an excellent way to learn more about different model architectures, optimizers, activation functions, and other aspects of machine learning because it shows you live what happens in the latent layer each epoch, essentially demonstrating how the model “learns”.
 
 The model uses an autoencoder to classify randomly generated repeating patterns in time series data. There are plots that show the model’s performance on validation data live after each epoch. It also demonstrates how the decoder regenerates output data and what the latent dimension looks like.
 
+![Live Plot Untrained Model](docs/live_plot.png)
+
+
 The structure of this notebook makes it very easy to change the encoder or decoder and see the effects of different layer types and architectures. Note that this model has been mainly built to demonstrate how VAEs perform and is not optimized for any real-world usage. To achieve that, you would need to adapt and test it further.
+
+For more information see also the keras [example](https://keras.io/examples/generative/vae/) on which the base model and sampling layer are based.
 
 # Installation
 ## Colab
@@ -70,6 +75,9 @@ This notebook demonstrates how a variational autoencoder (VAE) can be used to de
 
 The encoder uses convolutional layers to detect features of the input signal. It then projects onto two different dense layers that together form the latent dimension: one predicts a mean, and the other predicts a normally distributed variation. Using these two layers, a normal distribution is calculated, and a random sample from that distribution is sent to the decoder. The decoder uses convolutional transpose layers to upscale the signal, followed by a GRU layer to create an output signal. Both the encoder and decoder use multi-headed attention to emphasize the differences between patterns.
 
+During training the live plots show the performance of the model after each epoch. They also show the prediction of the model on a sample of the validation data:
+![Signal Reconstruction](docs/signal_reconstruction.png)
+
 ## Time Encoding and Bypass
 This VAE uses time encoding to help the decoder with the sliding windows that contain the patterns or parts of the patterns. With time encoding passed through the encoder and decoder, the patterns are classified on a circle where the center represents noise, and each pattern is further away from the center. The rotational direction of each point indicates where the encoder detected the pattern in the window.
 
@@ -77,9 +85,13 @@ This VAE uses time encoding to help the decoder with the sliding windows that co
 
 However, for real-world applications, this is not always useful because the timing might not always be known or available. A practical way to address this is to pass time encoding (essential for training) directly to the decoder, bypassing the encoder. This way, the decoder “knows” where in the window it has to reconstruct the pattern and achieves good matches, while the encoder only has to classify which pattern is most common in the window. To do this, you can run the notebook with the `build_model(..., time_bypass=True)` keyword argument.
 
-This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur. (Note that a very basic reconstruction of the time encoder will be done by the decoder for simplicity of the demo).
+This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur.
 
-The latent dimension (output) of the encoder looks like this with time encoding bypass: 
-![bypass](docs/time_bypass.png)
+The latent dimension (output) of the encoder looks like this with **time encoding bypass enabled**: 
+![bypass](docs/time_bypass_enabled.png)    
 
+It is clear that the patterns are clustered well together and noise is separated. But there is a less clear time structure then with time encoding. Other even less time aware patterns can be achieved as well if with different model architectures, but that would complecate the demo.
 
+## Other
+- With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes more around 300 - 400 epochs for clusters to show
+- we fixed all random parameters as much as possible with seeds, but differences in hardware and other factors might produce different results
