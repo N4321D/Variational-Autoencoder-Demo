@@ -82,23 +82,23 @@ During training the live plots show the performance of the model after each epoc
 ## Time Encoding and Bypass
 This VAE uses time encoding to help the decoder with the sliding windows that contain the patterns or parts of the patterns. With time encoding passed through the encoder and decoder, the patterns are classified on a circle where the center represents noise, and each pattern is further away from the center. The rotational direction of each point indicates where the encoder detected the pattern in the window.
 
-![with time encoding](docs/with_time_enc.png)
+![with time encoding](docs/latent_dim_video.png)
 
 However, for real-world applications, this is not always useful because the timing might not always be known or available. A practical way to address this is to pass time encoding (essential for training) directly to the decoder, bypassing the encoder. This way, the decoder “knows” where in the window it has to reconstruct the pattern and achieves good matches, while the encoder only has to classify which pattern is most common in the window. To do this, you can run the notebook with the `build_model(..., time_bypass=True)` keyword argument.
 
 This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur.
 
-The latent dimension (output) of the encoder looks like this with **time encoding bypass enabled**: 
-![bypass](docs/time_bypass_enabled.png)    
+The latent dimension (output) of the encoder looks like this with time encoding **bypass enabled**: 
+![bypass](docs/time_bypass_video.png)    
 
 It is clear that the patterns are clustered well together and noise is separated. But there is a less clear time structure then with time encoding. Other even less time aware patterns can be achieved as well if with different model architectures, but that would complecate the demo.
 
 ### Encoder & Decoder Architecture
-Here is an overview of the encoder and decoder architechture. The Encoder is shown with and without bypass enabled. The decoder stays the same:        
+Here is an overview of the encoder and decoder architechture. The Encoder is shown with and without bypass enabled. The architechture for the encoder is the same, but the time encoding is split off and the last value is passed to the output. The decoder stays more or less the same, but gets an extra node for the time encoding expansion:        
 
-|Encoder                                                 |  Encoder (Bypass Enabled) | Decoder  |
-|---------------------------------------------------------|---------|---|
-|<img src="docs/encoder.png" alt="encoder" height="600"/> | <img src="docs/encoder_bypass.png" alt="encoder bypass" height="600"/> | <img src="docs/decoder.png" alt="encoder" height="600"/> | 
+|Encoder                                                 |  Encoder (Bypass Enabled) | Decoder  | Decoder (Bypass Enabled)|
+|---------------------------------------------------------|---------|---|----|
+|<img src="docs/encoder.png" alt="encoder" height="600"/> | <img src="docs/encoder_bypass.png" alt="encoder bypass" height="600"/> | <img src="docs/decoder.png" alt="encoder" height="600"/> | <img src="docs/decoder_bypass.png" alt="encoder" height="600"/> |
 
 ## Other
 - With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes more around 300 - 400 epochs for clusters to show
