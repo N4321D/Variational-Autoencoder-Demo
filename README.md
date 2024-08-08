@@ -94,7 +94,7 @@ The latent dimension (output) of the encoder looks like this with time encoding 
 It is clear that the patterns are clustered well together and noise is separated. But there is a less clear time structure then with time encoding. Other even less time aware patterns can be achieved as well if with different model architectures, but that would complecate the demo.
 
 ### Encoder & Decoder Architecture
-Here is an overview of the encoder and decoder architechture. The Encoder is shown with and without bypass enabled. The decoder stays the same:        
+Here is an overview of the encoder and decoder architechture. The Encoder is shown with and without bypass enabled. The architechture for the encoder is the same, but the time encoding is split off and the last value is passed to the output. The decoder stays more or less the same, but gets an extra node for the time encoding expansion:        
 
 |Encoder                                                 |  Encoder (Bypass Enabled) | Decoder  | Decoder (Bypass Enabled)|
 |---------------------------------------------------------|---------|---|----|
