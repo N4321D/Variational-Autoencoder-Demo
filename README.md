@@ -94,12 +94,12 @@ The latent dimension (output) of the encoder looks like this with time encoding 
 It is clear that the patterns are clustered well together and noise is separated. But there is a less clear time structure then with time encoding. Other even less time aware patterns can be achieved as well if with different model architectures, but that would complecate the demo.
 
 ### Encoder & Decoder Architecture
-Here is an overview of the encoder and decoder architechture. The Encoder is shown with and without bypass enabled. The architechture for the encoder is the same, but the time encoding is split off and the last value is passed to the output. The decoder stays more or less the same, but gets an extra node for the time encoding expansion:        
+Here is an overview of the encoder and decoder architecture. The Encoder is shown with and without bypass enabled. The architechture for the encoder is the same, but the time encoding is split off and the last value is passed to the output. The decoder stays more or less the same, but gets an extra node for the time encoding expansion:        
 
 |Encoder                                                 |  Encoder (Bypass Enabled) | Decoder  | Decoder (Bypass Enabled)|
 |---------------------------------------------------------|---------|---|----|
 |<img src="docs/encoder.png" alt="encoder" height="600"/> | <img src="docs/encoder_bypass.png" alt="encoder bypass" height="600"/> | <img src="docs/decoder.png" alt="encoder" height="600"/> | <img src="docs/decoder_bypass.png" alt="encoder" height="600"/> |
 
 ## Other
-- With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes more around 300 - 400 epochs for clusters to show
+- With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes much longer for cluster to show. For both it takes about 300 - 400 epochs to get close to the shown examples here.
 - we fixed all random parameters as much as possible with seeds, but differences in hardware and other factors might produce different results
