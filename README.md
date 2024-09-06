@@ -31,7 +31,7 @@ To setup the right environment I recommend to use this container that we built i
 [**Docker Hub**](https://hub.docker.com/repository/docker/n4321d/rapids-keras-torch-tf/general)
 
 ### Create you own enviroment
-If you feel uncomfortable running random containers (which is good), or if you don’t have an NVIDIA GPU, you can easily create your own environment. These are the key packages you need:
+If you feel uncomfortable running random containers, or if you don’t have an NVIDIA GPU, you can easily create your own environment. These are the key packages you need:
 
 ```
 keras == 3.4.1 
