@@ -8,9 +8,9 @@
 ```
 # VARIATIONAL AUTOENCODER TIMESERIES CLASSIFICATION DEMO
 
-This repository contains a demo showcasing how autoencoders can be used to classify patterns in time series data, with a focus on variational autoencoders (VAEs). It is also an excellent way to learn more about different model architectures, optimizers, activation functions, and other aspects of machine learning because it shows you live what happens in the latent layer each epoch, essentially demonstrating how the model “learns”.
+This repository contains a demo showcasing how autoencoders can be used to classify patterns in time series data, with a focus on variational autoencoders (VAEs). It is also an excellent way to learn more about different model architectures, optimizers, activation functions, and other aspects of machine learning because it shows you live what happens in the latent layer after each epoch, essentially demonstrating how the model learns.
 
-The model uses an autoencoder to classify randomly generated repeating patterns in time series data. There are plots that show the model’s performance on validation data live after each epoch. It also demonstrates how the decoder regenerates output data and what the latent dimension looks like.
+The model uses an autoencoder to classiffy repeating patterns in time series data. There are also plots that show the model’s performance on validation data live after each epoch. Finally, there is a plot that demonstrates how the decoder regenerates output data and what the latent dimension looks like.
 
 ![Live Plot Untrained Model](docs/live_plot.png)
 
@@ -37,9 +37,12 @@ If you feel uncomfortable running random containers (which is good), or if you d
 keras == 3.4.1 
 tensorflow == 2.16.2
 holoviews == 1.19.1
+hvplot == 0.10.0
 panel == 1.4.4
 numpy == 1.26.4
-jupyterlab == 4.2.4 
+jupyterlab == 4.2.4
+scipy == 1.14.0
+pandas == 2.2.2
 ```
 
 Other versions might work as well but have not been tested.
@@ -82,7 +85,14 @@ During training the live plots show the performance of the model after each epoc
 ## Time Encoding and Bypass
 This VAE uses time encoding to help the decoder with the sliding windows that contain the patterns or parts of the patterns. With time encoding passed through the encoder and decoder, the patterns are classified on a circle where the center represents noise, and each pattern is further away from the center. The rotational direction of each point indicates where the encoder detected the pattern in the window.
 
-![with time encoding](docs/latent_dim_video.png)
+![with time encoding](docs/latent_dim.png)
+
+
+The image below demonstrates how the trained encoder processes new data:
+![new data with time encoding](docs/latent_dim_new_data.png)
+- **White dot**: New data within the training set’s range and features is classified correctly.
+- **Pink dot**: Data outside the training frequency range is classified as noise.
+- **Blue dot**: The same data as the white dot, but shifted 40% to the right in the input window, showing that the angular position in the latent space corresponds to the pattern’s location in the window.
 
 However, for real-world applications, this is not always useful because the timing might not always be known or available. A practical way to address this is to pass time encoding (essential for training) directly to the decoder, bypassing the encoder. This way, the decoder “knows” where in the window it has to reconstruct the pattern and achieves good matches, while the encoder only has to classify which pattern is most common in the window. To do this, you can run the notebook with the `build_model(..., time_bypass=True)` keyword argument.
 
