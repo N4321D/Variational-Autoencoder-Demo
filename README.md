@@ -100,7 +100,7 @@ The latent dimension (output) of the encoder looks like this with time encoding 
 It is clear that the patterns are clustered well together and noise is separated over the horizontal (X) axis mainly and there is no circular pattern.
 New data within the training set’s range and features is classified correctly again (white dot), and outlier data is clustered with noise (pink dot).
 
-The time enconding now bypassed the encoder and went directly to the decoder. Therefore, the encoder classifies the patterns in the same location in the latent space, no matter the location of the pattern in the input window. Thus, shifting the new data does not put it in a different position in the latent space (blue diamond):
+The time enconding now bypassed the encoder and went directly to the decoder. Therefore, the encoder classifies the patterns in the same location in the latent space, no matter the location of the pattern in the input window. Thus, shifting the new data does not put it in a different position in the latent space (blue diamond):   
 ![new data without time encoding](docs/latent_dim_new_data_no_tenc_shift.png)
 
 ### Encoder & Decoder Architecture
