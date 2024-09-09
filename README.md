@@ -8,12 +8,11 @@
 ```
 # VARIATIONAL AUTOENCODER TIMESERIES CLASSIFICATION DEMO
 
-This repository contains a demo showcasing how autoencoders can be used to classify patterns in time series data, with a focus on variational autoencoders (VAEs). It is also an excellent way to learn more about different model architectures, optimizers, activation functions, and other aspects of machine learning because it shows you live what happens in the latent layer after each epoch, essentially demonstrating how the model learns.
+This repository contains a demo showcasing how autoencoders can be used to classify patterns in time series data, especially variational autoencoders (VAEs). It is also an excellent way to learn more about different model architectures, optimizers, activation functions, and other aspects of machine learning because it shows live what happens in the latent layer after each epoch, essentially demonstrating how the model learns.
 
 The model uses an autoencoder to classiffy repeating patterns in time series data. There are also plots that show the model’s performance on validation data live after each epoch. Finally, there is a plot that demonstrates how the decoder regenerates output data and what the latent dimension looks like.
 
 ![Live Plot Untrained Model](docs/live_plot.png)
-
 
 The structure of this notebook makes it very easy to change the encoder or decoder and see the effects of different layer types and architectures. Note that this model has been mainly built to demonstrate how VAEs perform and is not optimized for any real-world usage. To achieve that, you would need to adapt and test it further.
 
@@ -27,12 +26,11 @@ The notebook can be executed in Colab [**here**](https://drive.google.com/file/d
 But if you want to run it locally (recommended) you can download the notebook here from the repository. 
 
 ### Docker container
-To setup the right environment I recommend to use this container that we built if you have an NVIDIA GPU:  
+To setup the right environment I recommend to use this container that we built if you use CUDA:  
 [**Docker Hub**](https://hub.docker.com/repository/docker/n4321d/rapids-keras-torch-tf/general)
 
 ### Create you own enviroment
 If you feel uncomfortable running random containers, or if you don’t have an NVIDIA GPU, you can easily create your own environment. These are the key packages you need:
-
 ```
 keras == 3.4.1 
 tensorflow == 2.16.2
@@ -44,16 +42,15 @@ jupyterlab == 4.2.4
 scipy == 1.14.0
 pandas == 2.2.2
 ```
-
 Other versions might work as well but have not been tested.
 
 
 # Usage
 
-**TL;DR:** press Run All -> Wait for the `UserWarning` to raise and stop execution -> Run last cell
+**TL;DR:** press Run All -> Wait for the `UserWarning` to raise and stop execution -> Run the next cell that contains the call to the `train` function.
 
 **Full instructions:**  
-Just run the notebook. At the end before you start the training it will raise a `UserWarning`:
+Run all cells of the notebook. At the end before you start the training it will raise a `UserWarning`:
 ```
 UserWarning: Force stop here to give live image time to load, please run next cell manually after image is loaded
 
@@ -64,14 +61,14 @@ Cell In[1], line 4
       2 # Please wait until you see the image and then manually run the next cell with the train function
 ----> 4 raise UserWarning("Force stop here to give live image time to load, please run next cell manually after image is loaded")
 ```
-This is because if we dont wait for the live plots to show, they wont update. 
-I havent found a better solution than this:   
-Wait for the plots to show and then run the last cell where you call train():
+This is to force stop execution of the code if when using run all. This is needed because if the next cells are executed before the live plots are shown, they will not update. 
+Unfortunately we have not found a better solution than this:   
+Wait for the plots to show (which should be almost instantly after running the cell) and then run the last cell where you call `train`:
 ```
 %%time
-train(batchsize=256, epochs=600)
+train(batchsize=256, epochs=400)
 ```
-If anyone knows how to fix that, please create a pull request or post your suggestion.
+*If anyone knows a better solution, please let us know by creating a pull request or posting your suggestion.*
 
 ## VAE Demo
 This notebook demonstrates how a variational autoencoder (VAE) can be used to detect patterns in a signal without supervision. A signal generator creates a predefined number of signals that repeat themselves (x) times in a time trace. Noise is then added, and the signals are shuffled. Signals are “manually” labeled based on the most dominant signal in each window of a sliding window view using the mode. This labeling is only used for plotting to visualize how the model classifies the signals.
@@ -92,16 +89,19 @@ The image below demonstrates how the trained encoder processes new data:
 ![new data with time encoding](docs/latent_dim_new_data.png)
 - **White dot**: New data within the training set’s range and features is classified correctly.
 - **Pink dot**: Data outside the training frequency range is classified as noise.
-- **Blue dot**: The same data as the white dot, but shifted 40% to the right in the input window, showing that the angular position in the latent space corresponds to the pattern’s location in the window.
+- **Blue diamond**: The same data as the white dot, but shifted 40% to the right in the input window, showing that the angular position in the latent space corresponds to the pattern’s location in the window.
 
 However, for real-world applications, this is not always useful because the timing might not always be known or available. A practical way to address this is to pass time encoding (essential for training) directly to the decoder, bypassing the encoder. This way, the decoder “knows” where in the window it has to reconstruct the pattern and achieves good matches, while the encoder only has to classify which pattern is most common in the window. To do this, you can run the notebook with the `build_model(..., time_bypass=True)` keyword argument.
 
 This will send the last value from the time encoder directly to the decoder, so the encoder just learns to detect the patterns without any indication of where in the window they occur.
 
 The latent dimension (output) of the encoder looks like this with time encoding **bypass enabled**: 
-![bypass](docs/time_bypass_video.png)    
+![new data without time encoding](docs/latent_dim_new_data_no_tenc.png)
+It is clear that the patterns are clustered well together and noise is separated over the horizontal (X) axis mainly and there is no circular pattern.
+New data within the training set’s range and features is classified correctly again (white dot), and outlier data is clustered with noise (pink dot).
 
-It is clear that the patterns are clustered well together and noise is separated. But there is a less clear time structure then with time encoding. Other even less time aware patterns can be achieved as well if with different model architectures, but that would complecate the demo.
+The time enconding now bypassed the encoder and went directly to the decoder. Therefore, the encoder classifies the patterns in the same location in the latent space, no matter the location of the pattern in the input window. Thus, shifting the new data does not put it in a different position in the latent space (blue diamond):
+![new data without time encoding](docs/latent_dim_new_data_no_tenc_shift.png)
 
 ### Encoder & Decoder Architecture
 Here is an overview of the encoder and decoder architecture. The Encoder is shown with and without bypass enabled. The architechture for the encoder is the same, but the time encoding is split off and the last value is passed to the output. The decoder stays more or less the same, but gets an extra node for the time encoding expansion:        
@@ -111,5 +111,5 @@ Here is an overview of the encoder and decoder architecture. The Encoder is show
 |<img src="docs/encoder.png" alt="encoder" height="600"/> | <img src="docs/encoder_bypass.png" alt="encoder bypass" height="600"/> | <img src="docs/decoder.png" alt="encoder" height="600"/> | <img src="docs/decoder_bypass.png" alt="encoder" height="600"/> |
 
 ## Other
-- With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes much longer for cluster to show. For both it takes about 300 - 400 epochs to get close to the shown examples here.
-- we fixed all random parameters as much as possible with seeds, but differences in hardware and other factors might produce different results
+- With `time_bypass` disabled the model needs 60 - 100 epoch to start showing clustering, with `time_bypass` enabled it takes much longer for cluster to show. For both it takes more than 300 to get close to the shown examples here. We limited the epochs to reproduce these examples, feel free to adjust them to your needs.
+- We fixed all random parameters as much as possible with seeds, but differences in hardware and other factors might produce different results.
