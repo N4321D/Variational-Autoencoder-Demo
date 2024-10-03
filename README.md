@@ -27,6 +27,7 @@ But if you want to run it locally (recommended) you can download the notebook he
 
 ### Docker container
 To setup the right environment I recommend to use this container that we built if you use CUDA:  
+docker pull n4321d/rapids-keras-torch-tf:20240804
 [**Docker Hub**](https://hub.docker.com/repository/docker/n4321d/rapids-keras-torch-tf/general)
 
 ### Create you own enviroment
